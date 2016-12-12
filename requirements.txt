@@ -1,1 +1,1 @@
--e https://github.com/BonnyCI/datadog-builder.git#egg=datadog-builder
+-e git+https://github.com/BonnyCI/datadog-builder.git#egg=datadog-builder

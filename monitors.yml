@@ -22,3 +22,4 @@ monitors:
         warning: 1
     query: '"process.up".over("host:zuul","process:mysql").last(3).count_by_status()'
     type: service check
+    something: else

@@ -1,24 +1,211 @@
 defaults:
   monitors:
-    multi: true
     options:
       locked: true
+      new_host_delay: 300
+      no_data_timeframe: 2
+      notify_audit: false
+      renotify_interval: 0
+      silenced: {}
+      timeout_h: 0
 
 monitors:
-  - name: mysqld process from ansible d
-    message: |
-      MySQL is down. That's probably bad.
+  - message: |
+      Triggers if any host's clock goes out of sync with the time given by
+      NTP. The offset threshold is configured in the Agent''s `ntp.yaml` file.
 
-      {{#is_alert}}fix it{{/is_alert}}
-      {{#is_alert_recovery}}fix it{{/is_alert_recovery}}
+      Please read the [KB article](http://help.datadoghq.com/hc/en-us/articles/204282095-Network-Time-Protocol-NTP-Offset-Issues)
+      on NTP Offset issues for more details on cause and resolution.
 
+      @slack-pirateshiprevenge
+    multi: true
+    name: '[Auto] Clock in sync with NTP'
     options:
-      new_host_delay: 300
-      notify_audit: false
       notify_no_data: false
       thresholds:
         critical: 1
         ok: 1
         warning: 1
-    query: '"process.up".over("host:zuul","process:mysql").last(3).count_by_status()'
+    query: '"ntp.in_sync".over("*").by("host").last(2).count_by_status()'
     type: service check
+  - message: |
+      mysql is down 
+
+      @slack-pirateshiprevenge
+    name: mysqld process from ansible
+    multi: true
+    options:
+      notify_no_data: false
+      thresholds:
+        critical: 1
+        ok: 1
+        warning: 1
+    query: '"process.up".over("host:zuul","process:mysql").by("host","process").last(2).count_by_status()'
+    type: service check
+  - message: |
+      Gearman went down!
+
+      {{#is_alert}}
+      Log onto host and fix it!
+      {{/is_alert}}
+
+      {{#is_alert_recovery}}
+      Phew! You fixed it!
+      {{/is_alert_recovery}}
+      @jlennox@au1.ibm.com
+      @slack-pirateshiprevenge"
+    multi: true
+    name: Gearman is down on {{host.name}}
+    options:
+      notify_no_data: true
+      thresholds:
+        critical: 2
+    query: '"gearman.can_connect".over("*").by("host","port","server").last(3).count_by_status()'
+    type: service check
+  - message: |
+      MySQL has gone down!
+
+      {{#is_alert}}
+      Quick Go Fix it!
+      {{/is_alert}}
+
+      {{#is_recovery}}
+      Phew, it's back!
+      {{/is_recovery}}
+
+      @jlennox@au1.ibm.com
+      @slack-pirateshiprevenge
+    multi: true
+    name: MySQL has gone down
+    options:
+      notify_no_data: true
+      thresholds:
+        critical: 2
+    query: '"mysql.can_connect".over("*").by("host","port").last(3).count_by_status()'
+    type: service check
+  - message: |
+      ZooKeepr went down!
+
+      {{#is_alert}}
+      ZooKeeper has failed! Help me!
+      {{/is_alert}}
+
+      {{#is_no_data}}
+      Hmm, ZooKeeper hasn't checked in for a while...
+      {{/is_no_data}}
+
+      {{#is_alert_recovery}}
+      Excellent, Zookeeper is back - Good job.
+      {{/is_alert_recovery}}
+
+      @jlennox@au1.ibm.com
+      @slack-pirateshiprevenge
+    multi: true
+    name: Zookeeper down!
+    options:
+      notify_no_data: true
+      thresholds:
+        warning: 2
+    query: '"zookeeper.ruok".over("*").by("host","port").last(3).count_by_status()'
+    type: service check
+  - message: |
+      There's not enough mergers!
+
+      @jlennox@au1.ibm.com
+      @slack-pirateshiprevenge
+    multi: false
+    name: Missing Mergers
+    options:
+      notify_no_data: true
+      require_full_window: true
+      thresholds:
+        critical: 1.0
+        warning: 2.0
+    query: min(last_5m):avg:gearman.workers_by_task{host:zuul,task:merger:merge} < 1
+    type: metric alert
+  - message: |
+      There's not enough mergers!
+
+      @jlennox@au1.ibm.com
+      @slack-pirateshiprevenge
+    multi: false
+    name: Missing Mergers on playground
+    options:
+      notify_no_data: true
+      require_full_window: true
+      thresholds:
+        critical: 1.0
+        warning: 2.0
+    query: min(last_1m):avg:gearman.workers_by_task{task:merger:merge,host:contrasjc-bastion-2}
+      < 1
+    type: metric alert
+  - message: |
+      {{#is_warning}}
+      System disk usage is nearing alert levels...
+      {{/is_warning}}
+
+      {{#is_alert}}
+      System disk usage is too high!
+      {{/is_alert}}
+      @aragwitz@pobox.com
+      @zxkuqyb@gmail.com
+      @omgjlk@us.ibm.com
+      @slack-pirateshiprevenge
+    multi: false
+    name: free disk space on nodepool
+    options:
+      notify_no_data: false
+      require_full_window: false
+      thresholds:
+        critical: 1000000000.0
+        warning: 2000000000.0
+    query: avg(last_5m):avg:system.disk.free{host:nodepool.bonnyci.portbleu.com} <= 1000000000
+    type: metric alert
+  - message: |
+      {{#is_warning}}
+      System disk usage is nearing alert levels...
+      {{/is_warning}}
+
+      {{#is_alert}}
+      System disk usage is too high!
+      {{/is_alert}}
+
+      @aragwitz@pobox.com
+      @zxkuqyb@gmail.com
+      @omgjlk@us.ibm.com
+      @rattboi@gmail.com
+      @slack-pirateshiprevenge
+    multi: true
+    name: free disk space on {{host.name}}
+    options:
+      notify_no_data: false
+      require_full_window: true
+      thresholds:
+        critical: 1000000000.0
+        warning: 2000000000.0
+    query: avg(last_5m):avg:system.disk.free{*} by {host} < 1000000000
+    type: metric alert
+  - message: |
+      {{#is_warning}}
+      System load over 1.5
+      {{/is_warning}}
+      {{#is_alert}}
+      System load over 2!
+      {{/is_alert}} 
+
+      @aragwitz@pobox.com
+      @zxkuqyb@gmail.com
+      @omgjlk@us.ibm.com
+      @rattboi@gmail.com
+      @slack-pirateshiprevenge
+    multi: true
+    name: system load on {{host.name}}
+    options:
+      notify_no_data: false
+      require_full_window: true
+      thresholds:
+        critical: 2.0
+        warning: 1.7
+    query: avg(last_5m):avg:system.load.1{*} by {host} > 2
+    type: metric alert
+

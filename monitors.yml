@@ -28,8 +28,9 @@ monitors:
         warning: 1
     query: '"ntp.in_sync".over("*").by("host").last(2).count_by_status()'
     type: service check
+
   - message: |
-      mysql is down 
+      mysql is down
 
       @slack-pirateshiprevenge
     name: mysqld process from ansible
@@ -42,6 +43,7 @@ monitors:
         warning: 1
     query: '"process.up".over("host:zuul","process:mysql").by("host","process").last(2).count_by_status()'
     type: service check
+
   - message: |
       Gearman went down!
 
@@ -62,6 +64,7 @@ monitors:
         critical: 2
     query: '"gearman.can_connect".over("*").by("host","port","server").last(3).count_by_status()'
     type: service check
+
   - message: |
       MySQL has gone down!
 
@@ -83,6 +86,7 @@ monitors:
         critical: 2
     query: '"mysql.can_connect".over("*").by("host","port").last(3).count_by_status()'
     type: service check
+
   - message: |
       ZooKeepr went down!
 
@@ -108,6 +112,7 @@ monitors:
         warning: 2
     query: '"zookeeper.ruok".over("*").by("host","port").last(3).count_by_status()'
     type: service check
+
   - message: |
       There's not enough mergers!
 
@@ -123,6 +128,7 @@ monitors:
         warning: 2.0
     query: min(last_5m):avg:gearman.workers_by_task{host:zuul,task:merger:merge} < 1
     type: metric alert
+
   - message: |
       There's not enough mergers!
 
@@ -139,6 +145,7 @@ monitors:
     query: min(last_1m):avg:gearman.workers_by_task{task:merger:merge,host:contrasjc-bastion-2}
       < 1
     type: metric alert
+
   - message: |
       {{#is_warning}}
       System disk usage is nearing alert levels...
@@ -161,6 +168,7 @@ monitors:
         warning: 2000000000.0
     query: avg(last_5m):avg:system.disk.free{host:nodepool.bonnyci.portbleu.com} <= 1000000000
     type: metric alert
+
   - message: |
       {{#is_warning}}
       System disk usage is nearing alert levels...
@@ -185,13 +193,14 @@ monitors:
         warning: 2000000000.0
     query: avg(last_5m):avg:system.disk.free{*} by {host} < 1000000000
     type: metric alert
+
   - message: |
       {{#is_warning}}
       System load over 1.5
       {{/is_warning}}
       {{#is_alert}}
       System load over 2!
-      {{/is_alert}} 
+      {{/is_alert}}
 
       @aragwitz@pobox.com
       @zxkuqyb@gmail.com
@@ -208,4 +217,3 @@ monitors:
         warning: 1.7
     query: avg(last_5m):avg:system.load.1{*} by {host} > 2
     type: metric alert
-

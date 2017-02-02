@@ -154,29 +154,6 @@ monitors:
       {{#is_alert}}
       System disk usage is too high!
       {{/is_alert}}
-      @aragwitz@pobox.com
-      @zxkuqyb@gmail.com
-      @omgjlk@us.ibm.com
-      @slack-pirateshiprevenge
-    multi: false
-    name: free disk space on nodepool
-    options:
-      notify_no_data: false
-      require_full_window: false
-      thresholds:
-        critical: 1000000000.0
-        warning: 2000000000.0
-    query: avg(last_5m):avg:system.disk.free{host:nodepool.bonnyci.portbleu.com} <= 1000000000
-    type: metric alert
-
-  - message: |
-      {{#is_warning}}
-      System disk usage is nearing alert levels...
-      {{/is_warning}}
-
-      {{#is_alert}}
-      System disk usage is too high!
-      {{/is_alert}}
 
       @aragwitz@pobox.com
       @zxkuqyb@gmail.com

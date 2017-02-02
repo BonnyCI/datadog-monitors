@@ -130,23 +130,6 @@ monitors:
     type: metric alert
 
   - message: |
-      There's not enough mergers!
-
-      @jlennox@au1.ibm.com
-      @slack-pirateshiprevenge
-    multi: false
-    name: Missing Mergers on playground
-    options:
-      notify_no_data: true
-      require_full_window: true
-      thresholds:
-        critical: 1.0
-        warning: 2.0
-    query: min(last_1m):avg:gearman.workers_by_task{task:merger:merge,host:contrasjc-bastion-2}
-      < 1
-    type: metric alert
-
-  - message: |
       {{#is_warning}}
       System disk usage is nearing alert levels...
       {{/is_warning}}

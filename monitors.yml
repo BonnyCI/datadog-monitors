@@ -125,7 +125,7 @@ monitors:
       require_full_window: true
       thresholds:
         critical: 1.0
-        warning: 2.0
+        warning: 1.0
     query: min(last_5m):avg:gearman.workers_by_task{host:zuul,task:merger:merge} < 1
     type: metric alert
 

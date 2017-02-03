@@ -177,3 +177,24 @@ monitors:
         warning: 1.7
     query: avg(last_5m):avg:system.load.1{*} by {host} > 2
     type: metric alert
+
+  - message: |
+      {{#is_warning}}
+      less than 400M of memory on {{host.name}}
+      {{/is_warning}}
+      {{#is_alert}}
+      less than 100M of memory on {{host.name}}
+      {{/is_alert}}
+
+      @zxkuqyb@gmail.com
+      @slack-pirateshiprevenge
+    multi: true
+    name: OOM on {{host.name}}
+    options:
+      notify_no_data: false
+      require_full_window: true
+      thresholds:
+        critical: 100000000
+        warning: 400000000
+    query: avg:system.mem.free{*} by {host}
+    type: metric alert

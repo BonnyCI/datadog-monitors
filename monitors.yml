@@ -191,7 +191,7 @@ monitors:
     multi: true
     name: OOM on {{host.name}}
     options:
-      notify_no_data: false
+      notify_no_data: true
       require_full_window: true
       thresholds:
         critical: 100000000

@@ -30,21 +30,6 @@ monitors:
     type: service check
 
   - message: |
-      mysql is down
-
-      @slack-pirateshiprevenge
-    name: mysqld process from ansible
-    multi: true
-    options:
-      notify_no_data: false
-      thresholds:
-        critical: 1
-        ok: 1
-        warning: 1
-    query: '"process.up".over("host:zuul","process:mysql").by("host","process").last(2).count_by_status()'
-    type: service check
-
-  - message: |
       Gearman went down!
 
       {{#is_alert}}

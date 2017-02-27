@@ -183,3 +183,20 @@ monitors:
         warning: 400000000
     query: avg:system.mem.free{*} by {host}
     type: metric alert
+
+  - message: |
+      {{#is_alert}}
+      zuul process wait time is very high
+      {{/is_alert}}
+
+      @zxkuqyb@gmail.com
+      @slack-pirateshiprevenge
+    multi: false
+    name: zuul process wait time
+    options:
+      notify_no_data: false
+      require_full_window: false
+      thresholds:
+        critical: 100000
+    query: avg:zuul.pipeline.check_github.job.bonnyci_run_check.wait_time.max{host:zuul}
+    type: metric alert

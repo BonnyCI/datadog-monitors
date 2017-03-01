@@ -186,17 +186,21 @@ monitors:
 
   - message: |
       {{#is_alert}}
-      zuul process wait time is very high
+      zuul check wait time is very high
       {{/is_alert}}
+      {{#is_warning}}
+      zuul check wait time is hight
+      {{/is_warning}}
 
       @zxkuqyb@gmail.com
       @slack-pirateshiprevenge
     multi: false
-    name: zuul process wait time
+    name: zuul check wait time
     options:
       notify_no_data: false
       require_full_window: false
       thresholds:
-        critical: 100000
-    query: avg:zuul.pipeline.check_github.job.bonnyci_run_check.wait_time.max{host:zuul}
+        critical: 800000
+        warning: 400000
+    query: avg:zuul.pipeline.check_github.job.bonnyci_run_check.wait_time.max{host:zuul} > 800000
     type: metric alert

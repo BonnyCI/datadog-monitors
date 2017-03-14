@@ -17,7 +17,7 @@ monitors:
       Please read the [KB article](http://help.datadoghq.com/hc/en-us/articles/204282095-Network-Time-Protocol-NTP-Offset-Issues)
       on NTP Offset issues for more details on cause and resolution.
 
-      @slack-pirateshiprevenge
+      @slack-bonny-dd-alerts
     multi: true
     name: '[Auto] Clock in sync with NTP'
     options:
@@ -40,7 +40,7 @@ monitors:
       Phew! You fixed it!
       {{/is_alert_recovery}}
       @jlennox@au1.ibm.com
-      @slack-pirateshiprevenge"
+      @slack-bonny-dd-alerts"
     multi: true
     name: Gearman is down on {{host.name}}
     options:
@@ -62,7 +62,7 @@ monitors:
       {{/is_recovery}}
 
       @jlennox@au1.ibm.com
-      @slack-pirateshiprevenge
+      @slack-bonny-dd-alerts
     multi: true
     name: MySQL has gone down
     options:
@@ -88,7 +88,7 @@ monitors:
       {{/is_alert_recovery}}
 
       @jlennox@au1.ibm.com
-      @slack-pirateshiprevenge
+      @slack-bonny-dd-alerts
     multi: true
     name: Zookeeper down!
     options:
@@ -102,7 +102,7 @@ monitors:
       There's not enough mergers!
 
       @jlennox@au1.ibm.com
-      @slack-pirateshiprevenge
+      @slack-bonny-dd-alerts
     multi: false
     name: Missing Mergers
     options:
@@ -120,11 +120,8 @@ monitors:
       System disk usage is too high!
       {{/is_alert}}
 
-      @aragwitz@pobox.com
       @zxkuqyb@gmail.com
-      @omgjlk@us.ibm.com
-      @rattboi@gmail.com
-      @slack-pirateshiprevenge
+      @slack-bonny-dd-alerts
     multi: true
     name: free disk space on {{host.name}}
     options:
@@ -144,11 +141,8 @@ monitors:
       System load over 2!
       {{/is_alert}}
 
-      @aragwitz@pobox.com
       @zxkuqyb@gmail.com
-      @omgjlk@us.ibm.com
-      @rattboi@gmail.com
-      @slack-pirateshiprevenge
+      @slack-bonny-dd-alerts
     multi: true
     name: system load on {{host.name}}
     options:
@@ -169,7 +163,7 @@ monitors:
       {{/is_alert}}
 
       @zxkuqyb@gmail.com
-      @slack-pirateshiprevenge
+      @slack-bonny-dd-alerts
     multi: true
     name: OOM on {{host.name}}
     options:
@@ -190,7 +184,7 @@ monitors:
       {{/is_warning}}
 
       @zxkuqyb@gmail.com
-      @slack-pirateshiprevenge
+      @slack-bonny-dd-alerts
     multi: false
     name: zuul check wait time
     options:

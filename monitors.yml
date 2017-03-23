@@ -195,3 +195,18 @@ monitors:
         warning: 400000
     query: avg:zuul.pipeline.check_github.job.bonnyci_run_check.wait_time.max{host:zuul} > 800000
     type: metric alert
+  - message: |
+      {{#is_warning}}Only {{warn_threshold}} nodes available{{/is_warning}} 
+      {{#is_alert}} {{threshold}} nodes available!{{/is_alert}} 
+
+      @slack-bonny-dd-alerts
+    multi: false
+    name: Available Nodes
+    options:
+      notify_no_data: false
+      require_full_window: false
+      thresholds:
+        critical: 1
+        warning: 3
+    query: avg:nodepool.nodes.ready{host:nodepool} < 2
+    type: metric alert

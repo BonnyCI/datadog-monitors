@@ -208,5 +208,5 @@ monitors:
       thresholds:
         critical: 1
         warning: 3
-    query: avg:nodepool.nodes.ready{host:nodepool} < 2
+    query: avg:nodepool.nodes.ready{host:nodepool} + avg:nodepool.nodes.used{host:nodepool} < 2
     type: metric alert

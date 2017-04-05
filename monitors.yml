@@ -172,7 +172,7 @@ monitors:
       thresholds:
         critical: 100000000
         warning: 400000000
-    query: avg(last_5m):avg:system.mem.usable{!host:logs} by {host} < 100000000
+    query: avg(last_5m):avg:system.mem.usable{*} by {host} < 100000000
     type: metric alert
 
   - message: |

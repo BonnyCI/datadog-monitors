@@ -135,10 +135,10 @@ monitors:
 
   - message: |
       {{#is_warning}}
-      System load over 1.5
+      System load over {{warn_threshold}}
       {{/is_warning}}
       {{#is_alert}}
-      System load over 2!
+      System load over {{threshold}}!
       {{/is_alert}}
 
       @zxkuqyb@gmail.com
@@ -149,9 +149,9 @@ monitors:
       notify_no_data: false
       require_full_window: true
       thresholds:
-        critical: 2.0
-        warning: 1.7
-    query: avg(last_5m):avg:system.load.1{*} by {host} > 2
+        critical: 3.0
+        warning: 2.7
+    query: avg(last_5m):avg:system.load.1{*} by {host} > 3
     type: metric alert
 
   - message: |

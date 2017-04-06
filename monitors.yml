@@ -197,8 +197,12 @@ monitors:
     type: metric alert
 
   - message: |
-      {{#is_warning}}Only {{warn_threshold}} nodes available{{/is_warning}}
-      {{#is_alert}} {{threshold}} nodes available!{{/is_alert}}
+      {{#is_warning}}
+      Only {{warn_threshold}} nodes available
+      {{/is_warning}}
+      {{#is_alert}}
+      {{threshold}} nodes available!
+      {{/is_alert}}
 
       @slack-bonny-dd-alerts
     multi: false
@@ -207,8 +211,8 @@ monitors:
       notify_no_data: false
       require_full_window: false
       thresholds:
-        critical: 1
-        warning: 3
+        critical: 2
+        warning: 4
     query: avg:nodepool.nodes.ready{host:nodepool} + avg:nodepool.nodes.used{host:nodepool} < 2
     type: metric alert
 

@@ -135,10 +135,10 @@ monitors:
 
   - message: |
       {{#is_warning}}
-      System load over 1.5
+      System load over {{warn_threshold}}
       {{/is_warning}}
       {{#is_alert}}
-      System load over 2!
+      System load over {{threshold}}!
       {{/is_alert}}
 
       @zxkuqyb@gmail.com
@@ -151,7 +151,28 @@ monitors:
       thresholds:
         critical: 2.0
         warning: 1.7
-    query: avg(last_5m):avg:system.load.1{*} by {host} > 2
+    query: avg(last_5m):avg:system.load.1{!host:bastion} by {host} > 2
+    type: metric alert
+
+  - message: |
+      {{#is_warning}}
+      System load over {{warn_threshold}}
+      {{/is_warning}}
+      {{#is_alert}}
+      System load over {{threshold}}!
+      {{/is_alert}}
+
+      @zxkuqyb@gmail.com
+      @slack-bonny-dd-alerts
+    multi: true
+    name: system load on bastion
+    options:
+      notify_no_data: false
+      require_full_window: true
+      thresholds:
+        critical: 3.0
+        warning: 2.7
+    query: avg(last_15m):avg:system.load.1{host:bastion} > 3
     type: metric alert
 
   - message: |

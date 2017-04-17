@@ -268,3 +268,24 @@ monitors:
         warning: 172800
     query: '"nodepool_server.got_images".over("host:nodepool")'
     type: metric alert
+
+  - message: |
+      {{#is_warning}}
+      zuul job times taking {{warn_threshold}} % more time that average
+      {{/is_warning}}
+
+      {{#is_alert}}
+      zuul job times taking {{threshold}} % more time that average
+      {{/is_alert}}
+
+      @slack-bonny-dd-alerts
+    multi: false
+    name: Zuul job time percent increase
+    options:
+      notify_no_data: false
+      require_full_window: false
+      thresholds:
+        critical: 400
+        warning: 300
+    query: 'pct_change(avg(last_1m),last_5m):avg:zuul.geard.packet.WORK_COMPLETE.median{host:zuul} >= 400'
+    type: metric alert

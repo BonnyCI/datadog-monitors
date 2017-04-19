@@ -214,7 +214,7 @@ monitors:
       thresholds:
         critical: 800000
         warning: 400000
-    query: avg:zuul.pipeline.gerrithub_check.resident_time.max{host:zuul} > 800000
+    query: avg(last_5m):avg:zuul.pipeline.gerrithub_check.resident_time.max{host:zuul} > 800000
     type: metric alert
 
   - message: |
@@ -234,7 +234,7 @@ monitors:
       thresholds:
         critical: 2
         warning: 4
-    query: 'avg:nodepool.nodes.ready{host:nodepool} + avg:nodepool.nodes.used{host:nodepool} < 2'
+    query: 'avg(last_5m):avg:nodepool.nodes.ready{host:nodepool} + avg:nodepool.nodes.used{host:nodepool} < 2'
     type: metric alert
 
   - message: |

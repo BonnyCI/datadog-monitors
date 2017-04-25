@@ -289,3 +289,25 @@ monitors:
         warning: 300
     query: 'pct_change(avg(last_1m),last_5m):avg:zuul.geard.packet.WORK_COMPLETE.median{host:zuul} >= 400'
     type: metric alert
+
+  - message: |
+      {{#is_alert}}
+      The {{ playbook.name }} ansible job failed against host {{ host.name }}.
+      Please have a look at
+      {{#is_match "playbook.name" "bastion"}} http://bastion.opentechsjc.bonnyci.org/cron-logs/system-ansible/ansible_bastion.yml_latest.log {{/is_match}}
+      {{#is_match "playbook.name" "install-ci"}} http://bastion.opentechsjc.bonnyci.org/cron-logs/cideploy/ansible_install-ci.yml_latest.log {{/is_match}}
+      to figure out why and fix it.
+      {{/is_alert}}
+
+      @slack-bonny-dd-alerts
+      @zxkuqyb@gmail.com
+      @jlennox@au1.ibm.com
+    multi: false
+    name: Ansible Run Failure
+    options:
+      notify_no_data: false
+      require_full_window: false
+      thresholds:
+        critical: 1
+    query: 'avg(last_30m):sum:ansible.task.failures{*} by {playbook} >= 1'
+    type: metric alert
